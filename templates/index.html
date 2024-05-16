@@ -1,0 +1,59 @@
+<html>
+<head>
+    <title>My HTML page</title>
+</head>
+<body>
+    <h1>page body</h1>
+    <form class="message-form" action="/test" method="POST">
+		<label for="testing_text">Введите текст для тестирования:</label>
+		<textarea class="message-input" id="testing_text" name="testing_text" rows="4" cols="50" placeholder="Enter text here..."></textarea>
+		<button type="submit">Submit</button>
+    </form>
+    <div class="message-content">
+              Здесь будет результат теста.
+    </div>
+</body>
+</html>
+<script>
+  const messageForm = document.querySelector('.message-form');
+  const messageInput = document.querySelector('.message-input');
+  const URL = "http://127.0.0.1:8000/test";
+
+  messageForm.addEventListener('submit', (event) => {
+
+    event.preventDefault();
+    console.log("asd");
+    const message = messageInput.value.trim();
+    if (message.length === 0) {
+      return;
+    }
+
+    messageInput.value = '';
+
+    const res = fetch(URL, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify({ 'testing_text': message })
+    });
+    if (JSON.stringify(res.data)==="{}") {
+      res.data.message = {"response": "request fialed"}
+    }
+    res
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data["message"]);
+        const response = data.message;
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', 'received');
+        messageItem.innerHTML = `
+        <div class="message-content">
+             ${response}
+        </div>
+          `;
+      });
+  });
+
+</script>
