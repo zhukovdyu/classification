@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/render_html")
+@app.get("/")
 def index_page(request: Request):
     return templates.TemplateResponse("index.html", context= {"request": request})
 
@@ -38,11 +38,6 @@ async def test_page(request: Request):
     class_name = cls.testPrediction(body["testing_text"])
     print(class_name)
     return {"message": body["testing_text"]}
-
-# функция обработки get запроса + декоратор 
-@app.get("/")
-def read_root():
-    return {"message": '\n'.join(cls.output_text)}
 
 @app.get("/create_train_data")
 def create_train_data():
